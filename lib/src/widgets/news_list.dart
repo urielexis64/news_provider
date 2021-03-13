@@ -10,15 +10,20 @@ class NewsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemCount: news.length,
-        itemBuilder: (BuildContext context, int index) {
-          return _News(
-            news: news[index],
-            index: index,
-          );
+      child: RefreshIndicator(
+        onRefresh: () async {
+          return false;
         },
+        child: ListView.builder(
+          physics: BouncingScrollPhysics(),
+          itemCount: news.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _News(
+              news: news[index],
+              index: index,
+            );
+          },
+        ),
       ),
     );
   }
