@@ -3,21 +3,26 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:news_provider/src/models/category_model.dart';
 import 'package:news_provider/src/models/news_models.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_provider/src/shared_prefs/user_preferences.dart';
 
 const _URL_NEWS = 'http://newsapi.org/v2';
 const _APIKEY = 'f25742f1cc624d78aca662eec1813ee1';
 
 class NewsService with ChangeNotifier {
   List<Article> headlines = [];
-  String _selectedCategory = 'business';
+  List<Article> favorites = [];
+
+  final prefs = new UserPreferences();
+
+  String _selectedCategory = 'technology';
 
   List<Category> categories = [
     Category(FontAwesomeIcons.building, 'business'),
     Category(FontAwesomeIcons.addressCard, 'general'),
     Category(FontAwesomeIcons.tv, 'entertainment'),
     Category(FontAwesomeIcons.volleyballBall, 'sports'),
-    Category(FontAwesomeIcons.vials, 'science'),
-    Category(FontAwesomeIcons.memory, 'technology'),
+    Category(FontAwesomeIcons.atom, 'science'),
+    Category(FontAwesomeIcons.microchip, 'technology'),
     Category(FontAwesomeIcons.headSideVirus, 'health'),
   ];
 
@@ -28,6 +33,12 @@ class NewsService with ChangeNotifier {
     categories.forEach((item) {
       categoryArticles[item.name] = [];
     });
+    final userFavs = prefs.favorites;
+    if (userFavs.length > 0) {
+      favorites.addAll(userFavs);
+    }
+
+    this.getArticlesByCategory(_selectedCategory);
   }
 
   get selectedCategory => _selectedCategory;
@@ -37,6 +48,18 @@ class NewsService with ChangeNotifier {
     this._selectedCategory = category;
     this.getArticlesByCategory(category);
     notifyListeners();
+  }
+
+  addFavorite(Article article) {
+    favorites.add(article);
+    notifyListeners();
+    prefs.favorites = favorites;
+  }
+
+  removeFavorite(Article article) {
+    favorites.remove(article);
+    notifyListeners();
+    prefs.favorites = favorites;
   }
 
   getTopHeadlines() async {
