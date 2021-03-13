@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 NewsResponse newsResponseFromJson(String str) =>
     NewsResponse.fromJson(json.decode(str));
 
@@ -31,16 +34,16 @@ class NewsResponse {
 }
 
 class Article {
-  Article({
-    this.source,
-    this.author,
-    this.title,
-    this.description,
-    this.url,
-    this.urlToImage,
-    this.publishedAt,
-    this.content,
-  });
+  Article(
+      {this.source,
+      this.author,
+      this.title,
+      this.description,
+      this.url,
+      this.urlToImage,
+      this.publishedAt,
+      this.content,
+      this.favorite = Icons.star_outline_rounded});
 
   Source source;
   String author;
@@ -50,6 +53,7 @@ class Article {
   String urlToImage;
   DateTime publishedAt;
   String content;
+  IconData favorite;
 
   factory Article.fromJson(Map<String, dynamic> json) => Article(
         source: Source.fromJson(json["source"]),
