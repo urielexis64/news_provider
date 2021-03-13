@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:news_provider/Constants.dart';
 import 'package:news_provider/src/models/news_models.dart';
 
@@ -14,6 +16,8 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting();
+
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 4,
@@ -33,6 +37,7 @@ class NewsCard extends StatelessWidget {
               _ImageCard(news),
               Divider(),
               _BodyCard(news),
+              _DateCard(news)
             ],
           ),
         ),
@@ -41,11 +46,18 @@ class NewsCard extends StatelessWidget {
   }
 }
 
-class _TopBarCard extends StatelessWidget {
+class _TopBarCard extends StatefulWidget {
   final Article news;
   final int index;
 
   const _TopBarCard({this.news, this.index});
+
+  @override
+  __TopBarCardState createState() => __TopBarCardState();
+}
+
+class __TopBarCardState extends State<_TopBarCard> {
+  IconData _iconData = Icons.star_outline_rounded;
 
   @override
   Widget build(BuildContext context) {
@@ -59,18 +71,31 @@ class _TopBarCard extends StatelessWidget {
               decoration:
                   BoxDecoration(shape: BoxShape.circle, color: Colors.red),
               child: Text(
-                '${index + 1}',
+                '${widget.index + 1}',
               ),
             ),
             SizedBox(
               width: 8,
             ),
             Text(
-              '${news.source.name}',
+              '${widget.news.source.name}',
             ),
           ],
         ),
-        Icon(Icons.arrow_forward_rounded)
+        Row(
+          children: [
+            IconButton(
+                icon: Icon(_iconData),
+                onPressed: () {
+                  setState(() {
+                    _iconData = _iconData == Icons.star_outline_rounded
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded;
+                  });
+                }),
+            Icon(Icons.arrow_forward_rounded)
+          ],
+        )
       ],
     );
   }
@@ -126,5 +151,27 @@ class _BodyCard extends StatelessWidget {
       textAlign: TextAlign.justify,
       style: TextStyle(fontWeight: FontWeight.w300),
     );
+  }
+}
+
+class _DateCard extends StatelessWidget {
+  final Article news;
+
+  const _DateCard(this.news);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomRight,
+      margin: EdgeInsets.only(top: 10),
+      child: Text(
+        formatDate(news.publishedAt),
+        style: TextStyle(color: Colors.grey, fontSize: 12),
+      ),
+    );
+  }
+
+  formatDate(DateTime date) {
+    return DateFormat.yMMMEd('es_ES').format(date);
   }
 }
