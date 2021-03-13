@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:news_provider/src/pages/tabs_page.dart';
 import 'package:news_provider/src/pages/web_view_page.dart';
 import 'package:news_provider/src/services/news_service.dart';
+import 'package:news_provider/src/shared_prefs/user_preferences.dart';
 import 'package:news_provider/src/theme/theme.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = new UserPreferences();
+  await prefs.initPrefs();
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
