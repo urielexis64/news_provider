@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:news_provider/src/models/news_models.dart';
 import 'package:news_provider/src/services/news_service.dart';
 import 'package:news_provider/src/widgets/news_list.dart';
-import 'package:news_provider/src/widgets/category_card.dart';
+import 'package:news_provider/src/widgets/cards/category_card.dart';
 
 class Tab2Page extends StatefulWidget {
   @override
