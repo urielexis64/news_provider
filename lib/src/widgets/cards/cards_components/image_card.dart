@@ -17,17 +17,23 @@ class ImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final safeUrlImage = (news.urlToImage != null)
+        ? news.urlToImage.startsWith('http')
+            ? news.urlToImage
+            : 'https:${news.urlToImage}'
+        : null;
+
     return Padding(
         padding: EdgeInsets.symmetric(vertical: verticalPadding),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
-          child: (news.urlToImage != null)
+          child: (safeUrlImage != null)
               ? FadeInImage(
                   height: height ?? null,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   placeholder: AssetImage(placeholderPath),
-                  image: NetworkImage(news.urlToImage))
+                  image: NetworkImage(safeUrlImage))
               : Image(image: AssetImage(noImagePath)),
         ));
   }
