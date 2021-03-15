@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:news_provider/src/models/news_models.dart';
+import 'package:news_provider/src/services/news_service.dart';
 import 'package:news_provider/src/widgets/cards/news_card.dart';
+import 'package:provider/provider.dart';
 
 class NewsList extends StatelessWidget {
   final List<Article> news;
@@ -12,16 +14,14 @@ class NewsList extends StatelessWidget {
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
-          return false;
+          final newsService = Provider.of<NewsService>(context, listen: false);
+          newsService.getArticlesByCategory(newsService.selectedCategory);
         },
         child: ListView.builder(
           physics: BouncingScrollPhysics(),
           itemCount: news.length,
           itemBuilder: (BuildContext context, int index) {
-            return _News(
-              news: news[index],
-              index: index,
-            );
+            return _News(news: news[index], index: index);
           },
         ),
       ),
