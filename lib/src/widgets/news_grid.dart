@@ -9,22 +9,26 @@ class NewsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: EdgeInsets.all(8),
-      physics: BouncingScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 6.0,
-          crossAxisSpacing: 6.0,
-          mainAxisExtent: MediaQuery.of(context).size.height / 2.7),
-      itemCount: news.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _News(
-          news: news[index],
-          index: index,
-        );
-      },
-    );
+    return news.length == 0
+        ? Center(
+            child: Text('No tienes noticias en favoritos. :('),
+          )
+        : GridView.builder(
+            padding: EdgeInsets.all(8),
+            physics: BouncingScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 6.0,
+                crossAxisSpacing: 6.0,
+                mainAxisExtent: MediaQuery.of(context).size.height / 2.7),
+            itemCount: news.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _News(
+                news: news[index],
+                index: index,
+              );
+            },
+          );
   }
 }
 
