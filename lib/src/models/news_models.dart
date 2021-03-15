@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:news_provider/src/shared_prefs/user_preferences.dart';
 
 NewsResponse newsResponseFromJson(String str) =>
     NewsResponse.fromJson(json.decode(str));
@@ -56,15 +57,19 @@ class Article {
   IconData favorite;
 
   factory Article.fromJson(Map<String, dynamic> json) => Article(
-        source: Source.fromJson(json["source"]),
-        author: json["author"] == null ? null : json["author"],
-        title: json["title"],
-        description: json["description"] == null ? null : json["description"],
-        url: json["url"],
-        urlToImage: json["urlToImage"] == null ? null : json["urlToImage"],
-        publishedAt: DateTime.parse(json["publishedAt"]),
-        content: json["content"] == null ? null : json["content"],
-      );
+      source: Source.fromJson(json["source"]),
+      author: json["author"] == null ? null : json["author"],
+      title: json["title"],
+      description: json["description"] == null ? null : json["description"],
+      url: json["url"],
+      urlToImage: json["urlToImage"] == null ? null : json["urlToImage"],
+      publishedAt: DateTime.parse(json["publishedAt"]),
+      content: json["content"] == null ? null : json["content"],
+      favorite: json["favorite"] == null
+          ? _isFavorite(json["url"])
+              ? Icons.star_rounded
+              : Icons.star_outline_rounded
+          : Icons.star_rounded);
 
   Map<String, dynamic> toJson() => {
         "source": source.toJson(),
@@ -75,7 +80,13 @@ class Article {
         "urlToImage": urlToImage == null ? null : urlToImage,
         "publishedAt": publishedAt.toIso8601String(),
         "content": content == null ? null : content,
+        "favorite": favorite == Icons.star_outline_rounded ? false : true
       };
+
+  static bool _isFavorite(String url) {
+    final userPrefs = UserPreferences();
+    return userPrefs.favorites.any((article) => article.url == url);
+  }
 }
 
 class Source {

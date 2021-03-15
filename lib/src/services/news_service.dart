@@ -14,7 +14,7 @@ class NewsService with ChangeNotifier {
 
   final prefs = new UserPreferences();
 
-  String _selectedCategory = 'technology';
+  String _selectedCategory = 'business';
 
   List<Category> categories = [
     Category(FontAwesomeIcons.building, 'business'),
@@ -52,14 +52,34 @@ class NewsService with ChangeNotifier {
 
   addFavorite(Article article) {
     favorites.add(article);
-    notifyListeners();
     prefs.favorites = favorites;
+    categoryArticles[_selectedCategory].forEach((art) {
+      if (art.url == article.url) {
+        art.favorite = Icons.star_rounded;
+      }
+    });
+    headlines.forEach((art) {
+      if (art.url == article.url) {
+        art.favorite = Icons.star_rounded;
+      }
+    });
+    notifyListeners();
   }
 
   removeFavorite(Article article) {
-    favorites.remove(article);
-    notifyListeners();
+    favorites.removeWhere((art) => art.url == article.url);
     prefs.favorites = favorites;
+    categoryArticles[_selectedCategory].forEach((art) {
+      if (art.url == article.url) {
+        art.favorite = Icons.star_outline_rounded;
+      }
+    });
+    headlines.forEach((art) {
+      if (art.url == article.url) {
+        art.favorite = Icons.star_outline_rounded;
+      }
+    });
+    notifyListeners();
   }
 
   getTopHeadlines() async {
